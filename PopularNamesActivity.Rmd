@@ -1,0 +1,106 @@
+---
+title: "Activity: Popular Names"
+author: "Suhail M."
+date: "June 2 2024"
+output: html_notebook
+---
+
+# Set Up
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, warnings=FALSE}
+# load necessary packages
+library(tidyverse)
+library(mosaic)
+library(dcData)
+```
+
+```{r}
+# Load the BabyNames data into RStudio environment (from dcData package)
+data("BabyNames")
+
+```
+
+# Activity
+
+**Goal**: By the end of the activity, each team will create a graph showing ups and downs in the popularity of four names according to the U.S. social security administration
+
+### Step 1: use multiple summary functions to examine the data source
+
+```{r}
+summary(BabyNames)
+
+```
+
+```{r}
+str(BabyNames)
+
+```
+
+```{r}
+glimpse(BabyNames)
+
+```
+
+### Step 2: sketch the plot you plan to create--this does not have to be submitted
+
+```{r}
+# the names of interest
+names_of_interest <- c("Suhail", "Mary", "Emma", "Anna")
+
+# groupby withh year, name
+GlyphReadyForm <- BabyNames %>%
+                    filter(name %in% names_of_interest) %>%
+                    group_by(year, name) %>%
+                    summarize(total = sum(count), .groups = 'drop')
+glimpse(GlyphReadyForm)
+
+
+```
+
+### Step 3: attempt to answer all questions about the data
+
+-   The glyph-ready data will have the columns year, name, and total.
+
+-   Q. What variable(s) from the raw data table do not appear at all in the graph?
+
+Ans : sex, count
+
+-   Q. What variable(s) in the graph are similar to corresponding variables in the raw data table, but might have been transformed in some way?
+
+Ans : count variable is transformed to total in graph data
+
+### Step 4: attempt to answer all questions about the data
+
+-   Q. Have cases been filtered out?
+
+Ans : Yes, Based on 4 names
+
+-   Q. Have cases been grouped and summarized within groups in any way?
+
+Ans : Yes, filtered data is grouped by year and name (due to gender neutral names)
+
+-   Q.Have any new variables been introduced? If so, what’s the relationship between the new variables and existing variables?
+
+Ans : total varibale indicates total count of baby name for that year, it is related to existing count varible, only difference that count considers gender and total don't
+
+### Step 5: explanation of data wrangling steps in English (not code)
+
+1.  Load the libraries & BabyNames data.
+2.  Filter the data to include only the names of interest.
+3.  Group the data by year and name.
+4.  Summarize the total count for each name per year.
+5.  Create the glyph-ready data frame.
+6.  Plot the data using ggplot2.
+
+### Step 6: complete this in your notes--this does not have to be submitted
+
+### Step 7:Data wrangling...( modify the starter code given in the book to produce your own R code..)
+
+```{r}
+ GlyphReadyForm%>%
+  ggplot(aes(x = year, y = total, group = name, color = name)) +
+  geom_line(linewidth = 1, alpha = 0.5) +
+  ylab("Popularity") + xlab("Year") +
+  theme_minimal() +
+  ggtitle("Popularity of Selected Baby Names Over Time")
+```
